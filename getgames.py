@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from urllib2 import urlopen
 from datetime import timedelta, date
 
-BASE_URL = "www.basketball-reference.com"
+BASE_URL = "http://www.basketball-reference.com"
 
 def get_daily_boxscore_links(day_url):
 	html = urlopen(day_url).read()
