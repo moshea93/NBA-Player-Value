@@ -24,6 +24,6 @@ while d <= end_date:
 		yearly_pbp_links.append(x)
 	d += delta
 
-f = open('2014to2015.txt', 'w')
+f = open('2015pbpurls.txt', 'w')
 for x in yearly_pbp_links:
 	f.write(str(x) + "\n")

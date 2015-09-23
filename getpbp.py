@@ -56,7 +56,7 @@ def get_possession(log, plays, awayteam, hometeam):
 	#plays that change NEXT play's possession
 	possessionenders = ['makes 2', 'makes 3', 'makes free throw 1 of 1', 'makes free throw 2 of 2', 'makes free throw 3 of 3', 'Turnover', 'Offensive foul']
 	#plays where basketball-reference and possession mismatch
-	mismatches = ['Personal foul', 'Shooting block foul', 'Loose ball foul', 'Personal take foul', 'Def 3 sec tech foul', 'Violation', 'Away from play foul', 'Inbound foul', 'Clear path foul', 'Personal block foul',]
+	mismatches = ['Personal foul', 'Shooting block foul', 'Loose ball foul', 'Personal take foul', 'Def 3 sec tech foul', 'Violation', 'Away from play foul', 'Inbound foul', 'Clear path foul', 'Personal block foul']
 	#plays where they MIGHT mismatch
 	might_mismatch = ['timeout', 'enters the game', 'Technical foul']
 	for x in range(len(pos)):
@@ -137,7 +137,7 @@ def create_pbp_file(url):
 
 	return data
 
-x = open('2014to2015.txt', 'r')
+x = open('2015pbpurls.txt', 'r')
 y = open('WholeSeason.txt', 'w')
 for i, line in enumerate(x):
 	data = create_pbp_file(line)
