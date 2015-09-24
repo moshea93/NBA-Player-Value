@@ -42,7 +42,7 @@ def get_league_stats(plays):
 lg_PF, lg_FTA, lg_FT, lg_FG, lg_AST, lg_PTS, lg_FGA, lg_ORB, lg_TOV, lg_TRB = get_league_stats(plays)
 
 #definitions
-factor = float(2) / 3 - (.5 * (float(lg_AST) / lg_FG)) / (2 * (float(lg_FG) / lg_FT))
+factor = 2.0 / 3 - (.5 * (float(lg_AST) / lg_FG)) / (2 * (float(lg_FG) / lg_FT))
 VOP = float(lg_PTS) / (lg_FGA - lg_ORB + lg_TOV + .44 * lg_FTA)
 DRBrate = (lg_TRB - lg_ORB) / float(lg_TRB)
 lg_PACE = 93.9
@@ -64,8 +64,8 @@ for x in range(1, len(players)):
 		if entries[4] == y[0:3]:
 			match = y.split(' ')
 			team_FG = float(match[1])
-			team_AST = float(match[3])
-			team_PACE = float(match[4])
+			team_AST = float(match[2])
+			team_PACE = float(match[3])
 			break
 	MP = int(entries[7])
 	FG = int(entries[8])
@@ -85,11 +85,11 @@ for x in range(1, len(players)):
 	PF = int(entries[28])
 	PTS = int(entries[29])
 	#float(1) / MP
-	uPER = float(1) / MP * (
+	uPER = 1.0 / MP * (
 			THREES
-			+ float(2) / 3 * AST
+			+ 2.0 / 3 * AST
 			+ (2 - factor * (team_AST) / team_FG) * FG
-			+ FT * .5 * (1 + (1 - (team_AST) / team_FG) + float(2) / 3 * team_AST / team_FG)
+			+ FT * .5 * (1 + (1 - (team_AST) / team_FG) + 2.0 / 3 * team_AST / team_FG)
 			- VOP * TOV
 			- VOP * DRBrate * (FGA - FG)
 			- VOP * .44 * (.44 + .56 * DRBrate) * (FTA - FT)
@@ -98,7 +98,7 @@ for x in range(1, len(players)):
 			+ VOP * STL
 			+ VOP * DRBrate * BLK
 			- PF * (float(lg_FT) / lg_PF - .44 * float(lg_FTA) / lg_PF * VOP)) 
-	newuPER = float(1) / MP * (
+	newuPER = 1.0 / MP * (
 			1.7297 * TWOS - (.7422 * TWOSATT)
 			+ 2.7767 * THREES - (.7686 * THREESATT)
 			+ .9212 * FT - (.3604 * FTA)
