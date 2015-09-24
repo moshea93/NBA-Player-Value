@@ -1,6 +1,7 @@
 f = open('WholeSeason.txt', 'r')
 data = list(f)
 
+#given an play, determines how many points were scored
 def get_points(pos):
 	if 'makes 3' in pos:
 		return 3
@@ -11,6 +12,7 @@ def get_points(pos):
 	else:
 		return 0
 
+#given a play, determines how many points the possessor scores during possession
 def rest_of_pos_points(posnum):
 	possessor = data[posnum][42:45]
 	if possessor == 'N/A':
@@ -59,7 +61,7 @@ def reb_pctg_after_free(data):
 					regpts += rest_of_pos_points(x + 2)
 	print 'Reb off Frees: ' + str(reb) + ' Off reb: ' + str(off) + ' Pts off: ' + str(offpts) + ' Def reb: ' + str(reg) + ' Pts off: ' + str(regpts)
 
-def reb_pctg_after_block(data):
+def blocks(data):
 	blocks = 0
 	reb = 0
 	off = 0
@@ -231,7 +233,7 @@ def points_and_possessions(data):
 
 get_first_frees(data)
 reb_pctg_after_free(data)
-reb_pctg_after_block(data)
+blocks(data)
 reb_pctg_after_shot(data)
 rebounds(data)
 turnovers(data)
