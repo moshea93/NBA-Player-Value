@@ -84,7 +84,7 @@ for x in range(1, len(players)):
 	TOV = int(entries[27])	
 	PF = int(entries[28])
 	PTS = int(entries[29])
-	#float(1) / MP
+	
 	uPER = 1.0 / MP * (
 			THREES
 			+ 2.0 / 3 * AST
@@ -98,17 +98,18 @@ for x in range(1, len(players)):
 			+ VOP * STL
 			+ VOP * DRBrate * BLK
 			- PF * (float(lg_FT) / lg_PF - .44 * float(lg_FTA) / lg_PF * VOP)) 
+	
 	newuPER = 1.0 / MP * (
-			1.7297 * TWOS - (.7422 * TWOSATT)
 			+ 2.7767 * THREES - (.7686 * THREESATT)
+			1.7297 * TWOS - (.7422 * TWOSATT)
 			+ .9212 * FT - (.3604 * FTA)
+			+ .32 * AST
 			- 1.1085 * TOV
 			+ .3029 * DRB
 			+ .9014 * ORB
 			+ 1.2399 * STL
 			+ .6411 * BLK
-			- .3248 * PF
-			+ .32 * AST)
+			- .3248 * PF)
 
 	pace_adj = lg_PACE / team_PACE
 	aPER = pace_adj * uPER

@@ -25,61 +25,22 @@ def rest_of_pos_points(posnum):
 		posnum += 1
 	return points
 
-def get_first_frees(data):
-	frees = 0
-	nonpos = 0
-	rebopp = 0
-	converts = 0
-	convertpts = 0
+#overall value of a possession (VOP) for the season
+def points_and_possessions(data):
+	pos = 0
+	pts = 0
+	possessor = ''
+	prev = ''
 	for x in range(len(data)):
-		if 'free throw' in data[x]:
-			frees += 1
-			if ('1 of 2' in data[x] or '1 of 3' in data[x]) and 'flagrant' not in data[x]:
-				nonpos += 1
-			if ('1 of 1' in data[x] or '2 of 2' in data[x] or '3 of 3' in data[x]) and 'flagrant' not in data[x]:
-				rebopp += 1
-				if 'makes' in data[x]:
-					converts += 1
-					convertpts += rest_of_pos_points(x + 1)
-	print 'Total free throws: ' + str(frees) + ' Free throw possessions: ' + str(nonpos) + ' Rebound Opportunities: ' + str(rebopp) + ' Converted Frees: ' + str(converts) + ' Points after Conversion: ' + str(convertpts)
-
-def reb_pctg_after_free(data):
-	reb = 0
-	off = 0
-	offpts = 0
-	reg = 0
-	regpts = 0
-	for x in range(len(data)):
-		if 'misses free throw' in data[x] and ('3 of 3' in data[x] or '2 of 2' in data[x] or '1 of 1' in data[x]):
-			if 'rebound' in data[x+1]:
-				reb += 1
-				if 'Offensive' in data[x+1]:
-					off += 1
-					offpts += rest_of_pos_points(x + 2)
-				if 'Defensive' in data[x+1]:
-					reg += 1
-					regpts += rest_of_pos_points(x + 2)
-	print 'Reb off Frees: ' + str(reb) + ' Off reb: ' + str(off) + ' Pts off: ' + str(offpts) + ' Def reb: ' + str(reg) + ' Pts off: ' + str(regpts)
-
-def blocks(data):
-	blocks = 0
-	reb = 0
-	off = 0
-	offpts = 0
-	reg = 0
-	regpts = 0
-	for x in range(len(data)):
-		if 'block by' in data[x]:
-			blocks += 1
-			if 'rebound' in data[x+1]:
-				reb += 1
-				if 'Offensive' in data[x+1]:
-					off += 1
-					offpts += rest_of_pos_points(x + 2) 
-				if 'Defensive' in data[x+1]:
-					reg += 1
-					regpts += rest_of_pos_points(x + 2)
-	print 'Blocks: ' + str(blocks) + ' Total Reb: ' + str(reb) + ' Offensive Reb: ' + str(off) + ' Pts off: ' + str(offpts) + ' Defensive Reb: ' + str(reg) + ' Pts off: ' + str(regpts)
+		if x == 0:
+			continue
+		pts += get_points(data[x])
+		possessor = data[x][42:45]
+		if possessor != prev and possessor != 'N/A':
+			pos += 1
+		prev = possessor
+	#print 'Possessions: ' + str(pos) + ' Points: ' + str(pts)
+	print 'Value of Possession (VOP): ' + str(float(pts)/pos)
 
 def reb_pctg_after_shot(data):
 	shots = 0
@@ -101,41 +62,6 @@ def reb_pctg_after_shot(data):
 					regpts += rest_of_pos_points(x + 2)
 	print 'Missed Shots: ' + str(shots) + ' Total Reb: ' + str(reb) + ' Offensive Reb: ' + str(off) + ' Pts off: ' + str(offpts) + ' Defensive Reb: ' + str(reg) + ' Pts off: ' + str(regpts)
 
-def rebounds(data):
-	rebounds = 0
-	off = 0
-	offpts = 0
-	reg = 0
-	regpts = 0
-	for x in range(len(data)):
-		if 'rebound' in data[x] and 'Team' not in data[x]:
-			rebounds += 1
-			if 'Offensive' in data[x]:
-				off += 1
-				offpts += rest_of_pos_points(x + 1)
-			if 'Defensive' in data[x]:
-				reg += 1
-				regpts += rest_of_pos_points(x + 1)
-	print 'Total Reb: ' + str(rebounds) + ' Offensive Reb: ' + str(off) + ' Pts off: ' + str(offpts) + ' Defensive Reb: ' + str(reg) + ' Pts off: ' + str(regpts)
-
-def turnovers(data):
-	turnovers = 0
-	points = 0
-	for x in range(len(data)):
-		if 'Turnover' in data[x]:
-			turnovers += 1
-			points += rest_of_pos_points(x + 1)
-	print 'Turnovers: ' + str(turnovers) + ' Points off: ' + str(points)
-
-def steals(data):
-	steals = 0
-	points = 0
-	for x in range(len(data)):
-		if 'steal' in data[x]:
-			steals += 1
-			points += rest_of_pos_points(x + 1)
-	print 'Steals: ' + str(steals) + ' Points off: ' + str(points)
-
 def makes(data):
 	twos = 0
 	threes = 0
@@ -156,6 +82,103 @@ def makes(data):
 				threes += 1
 				ptsoffthree += rest_of_pos_points(y)
 	print 'Buckets: ' + str(buckets) + ' Twos: ' + str(twos) + ' Pts off: ' + str(ptsofftwo) + ' Threes: ' + str(threes) + ' Pts off: ' + str(ptsoffthree)
+
+def get_first_frees(data):
+	frees = 0
+	pos = 0
+	rebopp = 0
+	converts = 0
+	convertpts = 0
+	for x in range(len(data)):
+		if 'free throw' in data[x]:
+			frees += 1
+			if ('1 of 2' in data[x] or '1 of 3' in data[x]) and 'flagrant' not in data[x]:
+				pos += 1
+			if ('1 of 1' in data[x] or '2 of 2' in data[x] or '3 of 3' in data[x]) and 'flagrant' not in data[x]:
+				rebopp += 1
+				if 'makes' in data[x]:
+					converts += 1
+					convertpts += rest_of_pos_points(x + 1)
+	#print 'Total free throws: ' + str(frees) + ' Free throw possessions: ' + str(nonpos) + ' Rebound Opportunities: ' + str(rebopp) + ' Converted Frees: ' + str(converts) + ' Points after Conversion: ' + str(convertpts)
+	print 'Possessions used per free throw: ' + str(float(pos)/frees) + ' Percentage of free throws with reb opportunity: ' + str(float(rebopp)/frees) + ' VOP after made free throw: ' + str(float(convertpts)/converts)
+
+def reb_pctg_after_free(data):
+	reb = 0
+	off = 0
+	offpts = 0
+	reg = 0
+	regpts = 0
+	for x in range(len(data)):
+		if 'misses free throw' in data[x] and ('3 of 3' in data[x] or '2 of 2' in data[x] or '1 of 1' in data[x]) and 'flagrant' not in data[x]:
+			if 'rebound' in data[x+1]:
+				reb += 1
+				if 'Offensive' in data[x+1]:
+					off += 1
+					offpts += rest_of_pos_points(x + 2)
+				if 'Defensive' in data[x+1]:
+					reg += 1
+					regpts += rest_of_pos_points(x + 2)
+	#print 'Reb off Frees: ' + str(reb) + ' Off reb: ' + str(off) + ' Pts off: ' + str(offpts) + ' Def reb: ' + str(reg) + ' Pts off: ' + str(regpts)
+	print 'Defensive reb % after missed free throw: ' + str(float(reg)/reb) + ' VOP after missed free throw+offensive reb: ' + str(float(offpts)/off) + ' VOP after missed free throw+defensive reb: ' + str(float(regpts)/reg)
+
+def turnovers(data):
+	turnovers = 0
+	points = 0
+	for x in range(len(data)):
+		if 'Turnover' in data[x]:
+			turnovers += 1
+			points += rest_of_pos_points(x + 1)
+	#print 'Turnovers: ' + str(turnovers) + ' Points off: ' + str(points)
+	print '(TURNOVERS) VOP after turnover: ' + str(float(points)/turnovers)
+
+def rebounds(data):
+	rebounds = 0
+	off = 0
+	offpts = 0
+	reg = 0
+	regpts = 0
+	for x in range(len(data)):
+		if 'rebound' in data[x] and 'Team' not in data[x]:
+			rebounds += 1
+			if 'Offensive' in data[x]:
+				off += 1
+				offpts += rest_of_pos_points(x + 1)
+			if 'Defensive' in data[x]:
+				reg += 1
+				regpts += rest_of_pos_points(x + 1)
+	#print 'Total Reb: ' + str(rebounds) + ' Offensive Reb: ' + str(off) + ' Pts off: ' + str(offpts) + ' Defensive Reb: ' + str(reg) + ' Pts off: ' + str(regpts)
+	print '(REBOUNDS) Defensive reb %: ' + str(float(reg)/rebounds) + ' VOP after defensive reb: ' + str(float(regpts)/reg) + ' VOP after offensive reb: ' + str(float(offpts)/off)
+
+def steals(data):
+	steals = 0
+	points = 0
+	for x in range(len(data)):
+		if 'steal' in data[x]:
+			steals += 1
+			points += rest_of_pos_points(x + 1)
+	#print 'Steals: ' + str(steals) + ' Points off: ' + str(points)
+	print '(STEALS) VOP after steal: ' + str(float(points)/steals)
+
+def blocks(data):
+	blocks = 0
+	reb = 0
+	off = 0
+	offpts = 0
+	reg = 0
+	regpts = 0
+	for x in range(len(data)):
+		if 'block by' in data[x]:
+			blocks += 1
+			if 'rebound' in data[x+1]:
+				reb += 1
+				if 'Offensive' in data[x+1]:
+					off += 1
+					offpts += rest_of_pos_points(x + 2) 
+				if 'Defensive' in data[x+1]:
+					reg += 1
+					regpts += rest_of_pos_points(x + 2)
+	#print 'Blocks: ' + str(blocks) + ' Total Reb: ' + str(reb) + ' Offensive Reb: ' + str(off) + ' Pts off: ' + str(offpts) + ' Defensive Reb: ' + str(reg) + ' Pts off: ' + str(regpts)
+	print '(BLOCKS) Defensive reb % after block: ' + str(float(reg)/reb) + ' VOP after block and offensive reb: ' + str(float(offpts)/off) + ' VOP after block+defensive reb: ' + str(float(regpts)/reg)
 
 def fouls(data):
 	fouls = 0
@@ -199,46 +222,19 @@ def fouls(data):
 			fouls += 1
 			flagrants += 1
 			flagfts += rest_of_pos_points(x)
+	#print 'Personal fouls: ' + str(fouls) + ' Offensive: ' + str(offensive) + ' Pts off: ' + str(offpts) + ' And 1\'s: ' + str(andones) + ' Pts off: ' + str(andonepts) + ' Regular fouls: ' + str(nonofforandone) + ' Pts off: ' + str(defpts) 
+	#print 'Flagrants: ' + str(flagrants) + ' Pts off: ' + str(flagfts)
+	#print 'Possessions used: ' + str(possessionsused)
+	#print 'Techs: ' + str(techs)
+	print '(FOULS) And1 value: ' + str(float(andonepts)/andones) + ' And1%: ' + str(float(andones)/(fouls - flagrants)) + ' VOP after Def non-And1 foul: ' + str(float(defpts)/nonofforandone) + ' Def Non-And1%: ' + str(float(nonofforandone)/(fouls - flagrants))
 
-	print 'Personal fouls: ' + str(fouls) + ' Offensive: ' + str(offensive) + ' Pts off: ' + str(offpts) + ' And 1\'s: ' + str(andones) + ' Pts off: ' + str(andonepts) + ' Regular fouls: ' + str(nonofforandone) + ' Pts off: ' + str(defpts) 
-#	print 'Flagrants: ' + str(flagrants) + ' Pts off: ' + str(flagfts)
-#	print 'Possessions used: ' + str(possessionsused)
-#	print 'Techs: ' + str(techs)
-
-def assists(data):
-	assists = 0
-	threeast = 0
-	for x in data:
-		if 'assist by' in x:
-			assists += 1
-			if '3-pt' in x:
-				threeast += 1
-	print 'Total assists: ' + str(assists) + ' Assists on 3\'s: ' + str(threeast)
-
-def points_and_possessions(data):
-	pos = 0
-	pts = 0
-	possessor = ''
-	prev = ''
-	for x in range(len(data)):
-		if x == 0:
-			continue
-		pts += get_points(data[x])
-		possessor = data[x][42:45]
-		if possessor != prev and possessor != 'N/A':
-			pos += 1
-		prev = possessor
-
-	print 'Possessions: ' + str(pos) + ' Points: ' + str(pts)
-
+points_and_possessions(data)
+reb_pctg_after_shot(data)
+makes(data)
 get_first_frees(data)
 reb_pctg_after_free(data)
-blocks(data)
-reb_pctg_after_shot(data)
-rebounds(data)
 turnovers(data)
+rebounds(data)
 steals(data)
-makes(data)
+blocks(data)
 fouls(data)
-assists(data)
-points_and_possessions(data)
