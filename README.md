@@ -29,8 +29,8 @@ immediately and intuitively recognizable as far too low by basketball fans and a
 overvalue players that take many shots at a low efficiency. I refigure how these weights are
 calculated, with break even shooting percentages more in line with common sense.
 
-  The third improvement involves incorporating what happens on the next possession into the weight I
-assign each statistic. To see what that means, let's consider the value of a steal. While a steal is
+  The third improvement involves incorporating what happens on the following possession into the weight
+I assign each statistic. To see what that means, let's consider the value of a steal. While a steal is
 worth the VOP figure for ending the opponent's possession, it also frequently leads to a valuable fast
 break opportunity, which has a higher than normal points expectation. In fact teams typically score
 around .2 points more on possession immediately following steals. Thus a steal is worth VOP + .2, for
