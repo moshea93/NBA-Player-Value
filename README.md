@@ -1,4 +1,4 @@
-# NBAsteals
+# NBA Player Value
 
   This project aimed to improve the formula of a widely used basketball statistic, John Hollinger's widely
 used "PER". It involved scraping the play-by-play data for the 2014-15 NBA season from
