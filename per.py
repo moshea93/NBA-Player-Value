@@ -101,7 +101,7 @@ for x in range(1, len(players)):
 	
 	newuPER = 1.0 / MP * (
 			+ 2.7767 * THREES - (.7686 * THREESATT)
-			1.7297 * TWOS - (.7422 * TWOSATT)
+			+ 1.7297 * TWOS - (.7422 * TWOSATT)
 			+ .9212 * FT - (.3604 * FTA)
 			+ .32 * AST
 			- 1.1085 * TOV
